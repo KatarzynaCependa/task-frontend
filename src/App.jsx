@@ -1,35 +1,65 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import { getNews } from "../src/services/api";
+
+import { useState, useEffect } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import moment from "moment";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [news, setNews] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+
+  const fetchNews = async () => {
+    try {
+      setLoading(true);
+      const newData = await getNews(page);
+      setNews((prevNews) => [...prevNews, ...newData]);
+      setPage((prevPage) => prevPage + 1);
+      console.log("newData", newData);
+      console.log("page", page);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNews();
+  }, []);
+
+  const fetchMoreNews = () => {
+    if (news.length < 100) {
+      fetchNews();
+    } else {
+      setHasMore(false);
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <InfiniteScroll
+        dataLength={news.length}
+        next={fetchMoreNews}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+      >
+        {news.map((item, index) => (
+          <div key={index} className="container">
+            <h2>{item.title}</h2>
+            <div>
+              <img src={item.urlToImage} alt="Image of ${item.title} news" />
+            </div>
+            <p>{moment(item.publishedAt).format("YYYY/MM/DD")}</p>
+            <p>{item.description}</p>
+            <a href={item.url}>{item.url}</a>
+          </div>
+        ))}
+      </InfiniteScroll>
+    </div>
+  );
 }
 
-export default App
+export default App;
