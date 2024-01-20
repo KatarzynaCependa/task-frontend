@@ -10,7 +10,7 @@
 }
 
 .videoContainer {
-  grid-gap: 16px;
+  grid-gap: 35px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   list-style: none;
@@ -26,11 +26,18 @@
 }
 
 .link {
-  font-size: small;
+  font-size: x-small;
 }
 
 .statsContainer {
   display: flex;
   justify-content: space-around;
+  align-items: center;
   font-size: small;
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  margin: 0;
 }

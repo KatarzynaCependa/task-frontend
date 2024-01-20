@@ -3,6 +3,9 @@ import { searchApi } from "../src/services/api";
 
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useEffect, useState } from "react";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 
 const App = () => {
   const [videos, setVideos] = useState([]);
@@ -13,6 +16,7 @@ const App = () => {
       try {
         const initialVideos = await searchApi(1);
         setVideos(initialVideos);
+        console.log("videos", videos);
       } catch (error) {
         console.error("Error fetching initial data:", error);
       }
@@ -26,6 +30,7 @@ const App = () => {
       const newVideos = await searchApi(page + 1);
       setVideos((prevVideos) => [...prevVideos, ...newVideos]);
       setPage((prevPage) => prevPage + 1);
+      console.log("videos", videos);
     } catch (error) {
       console.error("Error fetching more data:", error);
     }
@@ -41,21 +46,37 @@ const App = () => {
       <ul className="videoContainer">
         {videos.map((item) => (
           <li key={item.id} className="wrapper">
-            <video controls width="250" className="video">
+            <video controls width="250" preload="metadata" className="video">
               <source src={item.videos.small.url} type="video/webm" />
             </video>
-            <a
-              href={item.pageURL}
-              className="link"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {item.pageURL}
-            </a>
+            <p className="link">
+              You can download the video{" "}
+              <a href={item.pageURL} target="_blank" rel="noreferrer">
+                here
+              </a>
+            </p>
             <div className="statsContainer">
-              <p>Likes: {item.likes}</p>
-              <p>Views: {item.views}</p>
-              <p>Downloads: {item.downloads}</p>
+              <p className="stats">
+                <FavoriteBorderOutlinedIcon
+                  fontSize="small"
+                  style={{ marginRight: "5px" }}
+                />
+                {item.likes}
+              </p>
+              <p className="stats">
+                <RemoveRedEyeOutlinedIcon
+                  fontSize="small"
+                  style={{ marginRight: "5px" }}
+                />
+                {item.views}
+              </p>
+              <p className="stats">
+                <DownloadOutlinedIcon
+                  fontSize="small"
+                  style={{ marginRight: "5px" }}
+                />
+                {item.downloads}
+              </p>
             </div>
           </li>
         ))}
