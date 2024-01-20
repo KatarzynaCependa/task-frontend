@@ -5,10 +5,6 @@
   text-align: center;
 }
 
-.wrapper {
-  display: grid;
-}
-
 .videoContainer {
   grid-gap: 35px;
   display: grid;
@@ -17,6 +13,10 @@
   margin: 0 auto;
   max-width: calc(100vw - 48px);
   padding: 0;
+}
+
+.wrapper {
+  display: grid;
 }
 
 .video {

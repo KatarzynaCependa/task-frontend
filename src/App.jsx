@@ -1,8 +1,9 @@
 import "./App.css";
+import { Loader } from "./components/Loader";
 import { searchApi } from "../src/services/api";
 
-import InfiniteScroll from "react-infinite-scroll-component";
 import { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
@@ -16,7 +17,6 @@ const App = () => {
       try {
         const initialVideos = await searchApi(1);
         setVideos(initialVideos);
-        console.log("videos", videos);
       } catch (error) {
         console.error("Error fetching initial data:", error);
       }
@@ -30,7 +30,6 @@ const App = () => {
       const newVideos = await searchApi(page + 1);
       setVideos((prevVideos) => [...prevVideos, ...newVideos]);
       setPage((prevPage) => prevPage + 1);
-      console.log("videos", videos);
     } catch (error) {
       console.error("Error fetching more data:", error);
     }
@@ -41,7 +40,7 @@ const App = () => {
       dataLength={videos.length}
       next={fetchMoreData}
       hasMore={true}
-      loader={<h4>Loading...</h4>}
+      loader={<Loader />}
     >
       <ul className="videoContainer">
         {videos.map((item) => (
@@ -61,21 +60,21 @@ const App = () => {
                   fontSize="small"
                   style={{ marginRight: "5px" }}
                 />
-                {item.likes}
+                {Number(item.likes).toLocaleString()}
               </p>
               <p className="stats">
                 <RemoveRedEyeOutlinedIcon
                   fontSize="small"
                   style={{ marginRight: "5px" }}
                 />
-                {item.views}
+                {Number(item.views).toLocaleString()}
               </p>
               <p className="stats">
                 <DownloadOutlinedIcon
                   fontSize="small"
                   style={{ marginRight: "5px" }}
                 />
-                {item.downloads}
+                {Number(item.downloads).toLocaleString()}
               </p>
             </div>
           </li>
