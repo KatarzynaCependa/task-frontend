@@ -1,16 +1,22 @@
 import axios from "axios";
 
-const API_key = "6b2cd22cfe404e0f8fa3682f8ec23424";
-const news_API_URL = `https://newsapi.org/v2/everything?q=bitcoin&apiKey=${API_key}`;
+const API_key = "36085372-0e054a65c2dad8200a3139bdc";
+const API_URL = "https://pixabay.com/api/videos/";
 
-export const getNews = async (page, pageSize = 10) => {
+export const searchApi = async (page) => {
   try {
-    const result = await axios.get(
-      `${news_API_URL}&page=${page}&pageSize=${pageSize}`
-    );
-    const data = result.data.articles;
-    return data;
+    const response = await axios.get(API_URL, {
+      params: {
+        key: API_key,
+        safesearch: true,
+        order: "popular",
+        per_page: "12",
+        page: page,
+      },
+    });
+    return response.data.hits;
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching data:", error);
+    throw error;
   }
 };
