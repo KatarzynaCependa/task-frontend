@@ -10,7 +10,7 @@ export const searchApi = async (page) => {
         key: API_key,
         safesearch: true,
         order: "popular",
-        per_page: "12",
+        per_page: "9",
         page: page,
       },
     });

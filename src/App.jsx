@@ -41,6 +41,7 @@ const App = () => {
       next={fetchMoreData}
       hasMore={true}
       loader={<Loader />}
+      style={{ overflow: "visible" }}
     >
       <ul className="videoContainer">
         {videos.map((item) => (
