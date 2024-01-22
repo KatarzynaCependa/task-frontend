@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_key = "36085372-0e054a65c2dad8200a3139bdc";
+const API_key = import.meta.env.VITE_REACT_APP_PIXABAY_API_KEY;
 const API_URL = "https://pixabay.com/api/videos/";
 
 export const searchApi = async (page) => {
