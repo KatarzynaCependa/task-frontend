@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
+
 import "./VideoList.css";
 import { searchApi } from "../../services/api";
 import { Loader } from "../Loader/Loader";
+import { Footer } from "../Footer/Footer";
 
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
@@ -15,7 +17,7 @@ const VideoList = () => {
 
   const lastElementRef = useRef(null);
 
-  function onIntersecion(entries) {
+  function onIntersecionLast(entries) {
     const firstEntry = entries[0];
     if (firstEntry.isIntersecting && hasMore) {
       fetchMoreVideos();
@@ -23,34 +25,34 @@ const VideoList = () => {
   }
 
   useEffect(() => {
-    const observerLast = new IntersectionObserver(onIntersecion);
+    const observerLastEl = new IntersectionObserver(onIntersecionLast);
 
-    if (observerLast && lastElementRef.current) {
-      observerLast.observe(lastElementRef.current);
+    if (observerLastEl && lastElementRef.current) {
+      observerLastEl.observe(lastElementRef.current);
     }
 
     return () => {
-      if (observerLast) {
-        observerLast.disconnect();
+      if (observerLastEl) {
+        observerLastEl.disconnect();
       }
     };
   }, [videos]);
 
   const fetchMoreVideos = async () => {
-    if (videos.length < 36) {
-      try {
-        setIsLoading(true);
+    try {
+      setIsLoading(true);
 
-        const newVideos = await searchApi(page + 1);
+      const newVideos = await searchApi(page + 1);
+      if (videos.length === 45) {
+        setHasMore(false);
+      } else {
         setVideos((prevVideos) => [...prevVideos, ...newVideos]);
         setPage((prevPage) => prevPage + 1);
-      } catch (error) {
-        console.error("Error fetching more data:", error);
-      } finally {
-        setIsLoading(false);
       }
-    } else {
-      setHasMore(false);
+    } catch (error) {
+      console.error("Error fetching more data:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -58,7 +60,7 @@ const VideoList = () => {
     <>
       <ul className="videoContainer">
         {videos.map((item) => (
-          <li key={item.id} className="wrapper">
+          <li key={item.id}>
             <video controls width="250" preload="metadata" className="video">
               <source src={item.videos.small.url} type="video/webm" />
             </video>
@@ -91,11 +93,7 @@ const VideoList = () => {
           </li>
         ))}
         {isLoading && <Loader />}
-        {hasMore && (
-          <div ref={lastElementRef} style={{ textAlign: "center" }}>
-            ELEMENT TESTOWY
-          </div>
-        )}
+        {hasMore ? <div ref={lastElementRef} /> : <Footer />}
       </ul>
     </>
   );
