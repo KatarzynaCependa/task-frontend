@@ -43,7 +43,7 @@ const VideoList = () => {
       setIsLoading(true);
 
       const newVideos = await searchApi(page + 1);
-      if (videos.length === 45) {
+      if (newVideos.length === 0) {
         setHasMore(false);
       } else {
         setVideos((prevVideos) => [...prevVideos, ...newVideos]);
